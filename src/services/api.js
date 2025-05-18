@@ -25,8 +25,11 @@ export const getQueues = async () => {
 // services/api.js
 export const getDoctors = async () => {
     return [
-      { id: 1, name: "Dr. Andi", specialization: "Jantung", schedule: "Senin-Jumat 08:00-15:00" },
-      { id: 2, name: "Dr. Budi", specialization: "Mata", schedule: "Selasa-Kamis 10:00-17:00" }
+      { id: 1, name: "Dr. Andi", specialization: "Jantung", schedule: "08:00-15:00" },
+      { id: 2, name: "Dr. Budi", specialization: "Mata", schedule: "10:00-17:00" },
+      { id: 3, name: "Dr. Sule", specialization: "Kulit", schedule: "10:00-13:00" },
+      { id: 4, name: "Dr. Haidar", specialization: "Kandungan", schedule: "07:00-10:00" },
+      { id: 5, name: "Dr. Galih", specialization: "Paru", schedule: "12:00-14:00" },
     ];
   };
   

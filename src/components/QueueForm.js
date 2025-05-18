@@ -16,14 +16,16 @@ const QueueForm = ({ onQueueCreated }) => {
   const navigate = useNavigate();
 
   const doctors = [
-    { id: '1', name: 'Dr. Andi', specialization: 'Spesialis Jantung' },
-    { id: '2', name: 'Dr. Budi', specialization: 'Spesialis Mata' },
-    { id: '3', name: 'Dr. Citra', specialization: 'Spesialis Anak' }
+      { id: 1, name: "Dr. Andi", specialization: "Jantung", schedule: "08:00-15:00" },
+      { id: 2, name: "Dr. Budi", specialization: "Mata", schedule: "10:00-17:00" },
+      { id: 3, name: "Dr. Sule", specialization: "Kulit", schedule: "10:00-13:00" },
+      { id: 4, name: "Dr. Haidar", specialization: "Kandungan", schedule: "07:00-10:00" },
+      { id: 5, name: "Dr. Galih", specialization: "Paru", schedule: "12:00-14:00" },
   ];
 
   const visitTimes = [
-    '08:00', '09:00', '10:00', '11:00',
-    '13:00', '14:00', '15:00', '16:00'
+    '07.00','08:00', '09:00', '10:00', '11:00',
+    '13:00', '14:00', '15:00', '16:00', '17.00'
   ];
 
   const handleChange = (e) => {

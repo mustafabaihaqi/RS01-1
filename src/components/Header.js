@@ -9,8 +9,6 @@ const Header = () => {
         <Link to="/" style={styles.link}>Pendaftaran</Link>
         <Link to="/daftar-dokter" style={styles.link}>Daftar Dokter</Link>
         <Link to="/daftar-pasien" style={styles.link}>Daftar Pasien</Link>
-        <Link to="/jadwal-dokter" style={styles.link}>Jadwal Dokter</Link>
-        <Link to="/antrian-pasien" style={styles.link}>Antrian Pasien</Link>
       </nav>
     </header>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { createQueue } from '../services/api';
 
 const QueueForm = ({ onQueueCreated }) => {
@@ -9,6 +10,10 @@ const QueueForm = ({ onQueueCreated }) => {
   });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [queueNumber, setQueueNumber] = useState('');
+
+  const navigate = useNavigate();
 
   const doctors = [
     { id: '1', name: 'Dr. Andi', specialization: 'Spesialis Jantung' },
@@ -17,7 +22,7 @@ const QueueForm = ({ onQueueCreated }) => {
   ];
 
   const visitTimes = [
-    '08:00', '09:00', '10:00', '11:00', 
+    '08:00', '09:00', '10:00', '11:00',
     '13:00', '14:00', '15:00', '16:00'
   ];
 
@@ -29,64 +34,38 @@ const QueueForm = ({ onQueueCreated }) => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!formData.patientName.trim()) {
       setError('Nama pasien wajib diisi');
       return;
     }
-    
+
     if (formData.patientName.length > 50) {
       setError('Nama pasien maksimal 50 karakter');
       return;
     }
-    
+
     if (!formData.doctor || !formData.visitTime) {
       setError('Silakan pilih dokter dan waktu kunjungan');
       return;
     }
-    
+
     setError('');
-    setIsSubmitting(true);
-    
-    try {
-      const selectedDoctor = doctors.find(d => d.id === formData.doctor);
-      const doctorInfo = `${selectedDoctor.name} - ${selectedDoctor.specialization}`;
-      
-      const queueData = {
-        patientName: formData.patientName,
-        doctor: doctorInfo,
-        visitTime: formData.visitTime
-      };
-      
-      const response = await createQueue(queueData);
-      onQueueCreated(response);
-      
-      // Reset form
-      setFormData({
-        patientName: '',
-        doctor: '',
-        visitTime: ''
-      });
-    } catch (err) {
-      console.error('Error submitting form:', err);
-      setError('Gagal membuat antrean. Silakan coba lagi.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    const nomorAntrean = 'A-' + Math.floor(100 + Math.random() * 900);
+    setQueueNumber(nomorAntrean);
+    setShowPopup(true);
   };
 
   return (
     <div style={styles.container}>
       <h2 style={styles.title}>Pendaftaran Antrean Online</h2>
       {error && <p style={styles.error}>{error}</p>}
-      
+
       <form onSubmit={handleSubmit} style={styles.form}>
         <div style={styles.formGroup}>
-          <label htmlFor="patientName" style={styles.label}>
-            Nama Pasien:
-          </label>
+          <label htmlFor="patientName" style={styles.label}>Nama Pasien:</label>
           <input
             type="text"
             id="patientName"
@@ -98,11 +77,9 @@ const QueueForm = ({ onQueueCreated }) => {
             placeholder="Masukkan nama pasien"
           />
         </div>
-        
+
         <div style={styles.formGroup}>
-          <label htmlFor="doctor" style={styles.label}>
-            Pilih Dokter:
-          </label>
+          <label htmlFor="doctor" style={styles.label}>Pilih Dokter:</label>
           <select
             id="doctor"
             name="doctor"
@@ -118,11 +95,9 @@ const QueueForm = ({ onQueueCreated }) => {
             ))}
           </select>
         </div>
-        
+
         <div style={styles.formGroup}>
-          <label htmlFor="visitTime" style={styles.label}>
-            Waktu Kunjungan:
-          </label>
+          <label htmlFor="visitTime" style={styles.label}>Waktu Kunjungan:</label>
           <select
             id="visitTime"
             name="visitTime"
@@ -136,15 +111,25 @@ const QueueForm = ({ onQueueCreated }) => {
             ))}
           </select>
         </div>
-        
-        <button 
-          type="submit" 
-          style={styles.button}
-          disabled={isSubmitting}
-        >
+
+        <button type="submit" style={styles.button} disabled={isSubmitting}>
           {isSubmitting ? 'Memproses...' : 'Daftar Antrean'}
         </button>
       </form>
+
+      {showPopup && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modalContent}>
+            <h3>Konfirmasi Pendaftaran</h3>
+            <p><strong>Nama:</strong> {formData.patientName}</p>
+            <p><strong>Nomor Antrean:</strong> {queueNumber}</p>
+            <p><strong>Waktu Kunjungan:</strong> {formData.visitTime}</p>
+            <button onClick={() => setShowPopup(false)}>
+              Tutup
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -206,6 +191,23 @@ const styles = {
     padding: '10px',
     borderRadius: '4px',
     textAlign: 'center',
+  },
+  modalOverlay: {
+    position: 'fixed',
+    top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000,
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '8px',
+    width: '300px',
+    textAlign: 'center',
+    boxShadow: '0 2px 10px rgba(0,0,0,0.3)',
   },
 };
 

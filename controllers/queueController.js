@@ -6,7 +6,6 @@ let queueCounter = 1;
     try {
         const lastQueue = await Queue.findOne().sort({ queueNumber: -1 });
         if (lastQueue) {
-            // Ambil angka dari queueNumber (misal A003 → 3)
             const lastNumber = parseInt(lastQueue.queueNumber.substring(1), 10);
             queueCounter = lastNumber + 1;
         }

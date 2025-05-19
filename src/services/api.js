@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api'; // Sesuaikan dengan backend Anda
+const API_URL = 'http://localhost:5000/api';
 
 export const createQueue = async (queueData) => {
   try {

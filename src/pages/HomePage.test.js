@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import HomePage from './HomePage';
 
-// Mock QueueForm dan QueueConfirmation
+
 jest.mock('../components/QueueForm', () => ({ onQueueCreated }) => {
   return (
     <div>

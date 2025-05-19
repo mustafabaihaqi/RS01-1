@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createQueue } from '../services/api';
 
 const QueueForm = ({ onQueueCreated }) => {
   const [formData, setFormData] = useState({
@@ -16,24 +15,30 @@ const QueueForm = ({ onQueueCreated }) => {
   const navigate = useNavigate();
 
   const doctors = [
-      { id: 1, name: "Dr. Andi", specialization: "Jantung", schedule: "08:00-15:00" },
-      { id: 2, name: "Dr. Budi", specialization: "Mata", schedule: "10:00-17:00" },
-      { id: 3, name: "Dr. Sule", specialization: "Kulit", schedule: "10:00-13:00" },
-      { id: 4, name: "Dr. Haidar", specialization: "Kandungan", schedule: "07:00-10:00" },
-      { id: 5, name: "Dr. Galih", specialization: "Paru", schedule: "12:00-14:00" },
-  ];
-
-  const visitTimes = [
-    '07.00','08:00', '09:00', '10:00', '11:00',
-    '13:00', '14:00', '15:00', '16:00', '17.00'
+    { id: 1, name: "Dr. Andi", specialization: "Jantung", schedule: "08:00-15:00" },
+    { id: 2, name: "Dr. Budi", specialization: "Mata", schedule: "10:00-17:00" },
+    { id: 3, name: "Dr. Sule", specialization: "Kulit", schedule: "10:00-13:00" },
+    { id: 4, name: "Dr. Haidar", specialization: "Kandungan", schedule: "07:00-10:00" },
+    { id: 5, name: "Dr. Galih", specialization: "Paru", schedule: "12:00-14:00" },
   ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+
+    if (name === 'doctor') {
+      const selectedDoctor = doctors.find(doc => doc.id === parseInt(value));
+      const doctorSchedule = selectedDoctor ? selectedDoctor.schedule : '';
+      setFormData(prev => ({
+        ...prev,
+        doctor: value,
+        visitTime: doctorSchedule
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -50,7 +55,13 @@ const QueueForm = ({ onQueueCreated }) => {
     }
 
     if (!formData.doctor || !formData.visitTime) {
-      setError('Silakan pilih dokter dan waktu kunjungan');
+      setError('Silakan pilih dokter');
+      return;
+    }
+
+    const selectedDoctor = doctors.find(doc => doc.id === parseInt(formData.doctor));
+    if (!selectedDoctor) {
+      setError('Dokter tidak ditemukan');
       return;
     }
 
@@ -98,21 +109,14 @@ const QueueForm = ({ onQueueCreated }) => {
           </select>
         </div>
 
-        <div style={styles.formGroup}>
-          <label htmlFor="visitTime" style={styles.label}>Waktu Kunjungan:</label>
-          <select
-            id="visitTime"
-            name="visitTime"
-            value={formData.visitTime}
-            onChange={handleChange}
-            style={styles.select}
-          >
-            <option value="">-- Pilih Waktu --</option>
-            {visitTimes.map(time => (
-              <option key={time} value={time}>{time}</option>
-            ))}
-          </select>
-        </div>
+        {formData.doctor && (
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Waktu Kunjungan:</label>
+            <div style={{ padding: '10px', backgroundColor: '#eee', borderRadius: '4px' }}>
+              {formData.visitTime}
+            </div>
+          </div>
+        )}
 
         <button type="submit" style={styles.button} disabled={isSubmitting}>
           {isSubmitting ? 'Memproses...' : 'Daftar Antrean'}
@@ -211,6 +215,6 @@ const styles = {
     textAlign: 'center',
     boxShadow: '0 2px 10px rgba(0,0,0,0.3)',
   },
-};
+};  
 
 export default QueueForm;

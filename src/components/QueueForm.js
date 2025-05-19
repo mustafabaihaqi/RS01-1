@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createQueue , getDoctors } from '../services/api';
 
 const QueueForm = ({ onQueueCreated }) => {
   const [formData, setFormData] = useState({
-    patientName: '',
+    name: '',
     doctor: '',
     visitTime: ''
   });
@@ -14,14 +15,28 @@ const QueueForm = ({ onQueueCreated }) => {
 
   const navigate = useNavigate();
 
-  const doctors = [
-    { id: 1, name: "Dr. Andi", specialization: "Jantung", schedule: "08:00-15:00" },
-    { id: 2, name: "Dr. Budi", specialization: "Mata", schedule: "10:00-17:00" },
-    { id: 3, name: "Dr. Sule", specialization: "Kulit", schedule: "10:00-13:00" },
-    { id: 4, name: "Dr. Haidar", specialization: "Kandungan", schedule: "07:00-10:00" },
-    { id: 5, name: "Dr. Galih", specialization: "Paru", schedule: "12:00-14:00" },
-  ];
-
+  const [doctors, setDoctors] = useState([]);
+  const [loadingDoctors, setLoadingDoctors] = useState(true);
+  const [doctorError, setDoctorError] = useState('');
+  
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const data = await getDoctors();
+        console.log('Doctors fetched:', data); // debug
+        setDoctors(data);
+      } catch (err) {
+        console.error('Gagal mengambil data dokter:', err);
+        setDoctorError('Gagal memuat daftar dokter');
+      } finally {
+        setLoadingDoctors(false);
+      }
+    };
+  
+    fetchDoctors();
+  }, []);
+  
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -41,35 +56,53 @@ const QueueForm = ({ onQueueCreated }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!formData.patientName.trim()) {
+  
+    if (!formData.name.trim()) {
       setError('Nama pasien wajib diisi');
       return;
     }
-
-    if (formData.patientName.length > 50) {
+  
+    if (formData.name.length > 50) {
       setError('Nama pasien maksimal 50 karakter');
       return;
     }
-
+  
     if (!formData.doctor || !formData.visitTime) {
       setError('Silakan pilih dokter');
       return;
     }
-
+  
     const selectedDoctor = doctors.find(doc => doc.id === parseInt(formData.doctor));
     if (!selectedDoctor) {
       setError('Dokter tidak ditemukan');
       return;
     }
-
+  
+    const queueData = {
+      patientName: formData.name,
+      doctor: selectedDoctor.name,
+      time: selectedDoctor.name
+    };
+    
+  
+    setIsSubmitting(true);
     setError('');
-    const nomorAntrean = 'A-' + Math.floor(100 + Math.random() * 900);
-    setQueueNumber(nomorAntrean);
-    setShowPopup(true);
+  
+    try {
+      const createdQueue = await createQueue(queueData);
+      setQueueNumber(createdQueue.queueNumber); // Ambil dari respon backend
+      setShowPopup(true);
+      onQueueCreated(createdQueue); // Berikan ke HomePage untuk ditampilkan
+    } catch (err) {
+      setError('Gagal mendaftar antrean. Coba lagi.');
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+  
 
   return (
     <div style={styles.container}>
@@ -78,12 +111,12 @@ const QueueForm = ({ onQueueCreated }) => {
 
       <form onSubmit={handleSubmit} style={styles.form}>
         <div style={styles.formGroup}>
-          <label htmlFor="patientName" style={styles.label}>Nama Pasien:</label>
+          <label htmlFor="name" style={styles.label}>Nama Pasien:</label>
           <input
             type="text"
-            id="patientName"
-            name="patientName"
-            value={formData.patientName}
+            id="name"
+            name="name"
+            value={formData.name}
             onChange={handleChange}
             maxLength={50}
             style={styles.input}
@@ -93,30 +126,38 @@ const QueueForm = ({ onQueueCreated }) => {
 
         <div style={styles.formGroup}>
           <label htmlFor="doctor" style={styles.label}>Pilih Dokter:</label>
-          <select
-            id="doctor"
-            name="doctor"
-            value={formData.doctor}
-            onChange={handleChange}
-            style={styles.select}
-          >
-            <option value="">-- Pilih Dokter --</option>
-            {doctors.map(doctor => (
-              <option key={doctor.id} value={doctor.id}>
-                {doctor.name} - {doctor.specialization}
-              </option>
-            ))}
-          </select>
+          {loadingDoctors ? (
+            <p>Memuat daftar dokter...</p>
+          ) : doctorError ? (
+            <p style={styles.error}>{doctorError}</p>
+          ) : (
+            <select
+              id="doctor"
+              name="doctor"
+              value={formData.doctor}
+              onChange={handleChange}
+              style={styles.select}
+            >
+              <option value="">-- Pilih Dokter --</option>
+              {doctors.map(doctor => (
+                <option key={doctor.id} value={doctor.id}>
+                  {doctor.name} - {doctor.specialization}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
 
-        {formData.doctor && (
+
+        {formData.visitTime && (
           <div style={styles.formGroup}>
             <label style={styles.label}>Waktu Kunjungan:</label>
             <div style={{ padding: '10px', backgroundColor: '#eee', borderRadius: '4px' }}>
-              {formData.visitTime}
+             {formData.visitTime}
             </div>
-          </div>
-        )}
+         </div>
+      )}
+
 
         <button type="submit" style={styles.button} disabled={isSubmitting}>
           {isSubmitting ? 'Memproses...' : 'Daftar Antrean'}
@@ -127,7 +168,7 @@ const QueueForm = ({ onQueueCreated }) => {
         <div style={styles.modalOverlay}>
           <div style={styles.modalContent}>
             <h3>Konfirmasi Pendaftaran</h3>
-            <p><strong>Nama:</strong> {formData.patientName}</p>
+            <p><strong>Nama:</strong> {formData.name}</p>
             <p><strong>Nomor Antrean:</strong> {queueNumber}</p>
             <p><strong>Waktu Kunjungan:</strong> {formData.visitTime}</p>
             <button onClick={() => setShowPopup(false)}>

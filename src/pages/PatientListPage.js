@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getPatients } from '../services/api';
+import { getQueues } from '../services/api';
 import './PatientListPage.css';
 
 const PatientListPage = () => {
@@ -7,7 +7,7 @@ const PatientListPage = () => {
 
   useEffect(() => {
     const fetchPatients = async () => {
-      const data = await getPatients();
+      const data = await getQueues();
       setPatients(data);
     };
     fetchPatients();
@@ -29,9 +29,9 @@ const PatientListPage = () => {
           {patients.map(patient => (
             <tr key={patient.id} style={styles.row}>
               <td>{patient.queueNumber}</td>
-              <td>{patient.name}</td>
+              <td>{patient.patientName}</td>
               <td>{patient.doctor}</td>
-              <td>{patient.visitTime}</td>
+              <td>{patient.time}</td>
             </tr>
           ))}
         </tbody>

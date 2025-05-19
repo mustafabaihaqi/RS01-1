@@ -9,7 +9,7 @@ const QueueConfirmation = ({ queue }) => {
       <div style={styles.card}>
         <p style={styles.queueNumber}>Nomor Antrean: {queue.queueNumber}</p>
         <div style={styles.details}>
-          <p><strong>Nama Pasien:</strong> {queue.patientName}</p>
+          <p><strong>Nama Pasien:</strong> {queue.name}</p>
           <p><strong>Dokter:</strong> {queue.doctor}</p>
           <p><strong>Waktu Kunjungan:</strong> {queue.visitTime}</p>
         </div>

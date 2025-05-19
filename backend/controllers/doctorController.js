@@ -2,12 +2,12 @@ const Doctor = require('../models/doctor');
 
 const createDoctor = async (req, res) => {
     try {
-      const { name, specialization, availableTimes } = req.body;
+      const { name, specialization, visitTime } = req.body;
   
       const newDoctor = new Doctor({
         name,
         specialization,
-        availableTimes
+        visitTime
       });
   
       const savedDoctor = await newDoctor.save();

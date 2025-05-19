@@ -15,7 +15,7 @@ const PatientListPage = () => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.heading}>Daftar Pasien</h2>
+      <h2 style={styles.heading}>Daftar Antrean</h2>
       <table style={styles.table}>
         <thead style={styles.thead}>
           <tr>

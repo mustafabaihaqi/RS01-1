@@ -8,7 +8,7 @@ const Header = () => {
       <nav style={styles.nav}>
         <Link to="/" style={styles.link}>Pendaftaran</Link>
         <Link to="/daftar-dokter" style={styles.link}>Daftar Dokter</Link>
-        <Link to="/daftar-pasien" style={styles.link}>Daftar Pasien</Link>
+        <Link to="/daftar-pasien" style={styles.link}>Daftar Antrean</Link>
       </nav>
     </header>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getDoctors } from '../services/api'; // Anda perlu membuat fungsi API ini
+import { getDoctors } from '../services/api';
 
 const DoctorListPage = () => {
   const [doctors, setDoctors] = useState([]);
@@ -14,9 +14,9 @@ const DoctorListPage = () => {
 
   return (
     <div style={styles.container}>
-      <h2>Daftar Dokter</h2>
+      <h2 style={styles.heading}>Daftar Dokter</h2>
       <table style={styles.table}>
-        <thead>
+        <thead style={styles.thead}>
           <tr>
             <th>Nama</th>
             <th>Spesialisasi</th>
@@ -25,7 +25,7 @@ const DoctorListPage = () => {
         </thead>
         <tbody>
           {doctors.map(doctor => (
-            <tr key={doctor.id}>
+            <tr key={doctor.id} style={styles.row}>
               <td>{doctor.name}</td>
               <td>{doctor.specialization}</td>
               <td>{doctor.schedule}</td>
@@ -42,11 +42,27 @@ const styles = {
     padding: '20px',
     maxWidth: '1000px',
     margin: '0 auto',
+    fontFamily: 'Arial, sans-serif',
+  },
+  heading: {
+    marginBottom: '20px',
   },
   table: {
     width: '100%',
     borderCollapse: 'collapse',
-    marginTop: '20px',
+    boxShadow: '0 0 8px rgba(0, 0, 0, 0.1)',
+  },
+  thead: {
+    backgroundColor: '#2c3e50',
+    color: 'white',
+  },
+  row: {
+    transition: 'background-color 0.2s',
+  },
+  'table td, table th': {
+    border: '1px solid #ddd',
+    padding: '12px',
+    textAlign: 'left',
   },
 };
 

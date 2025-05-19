@@ -4,8 +4,6 @@ import Header from './components/Header';
 import HomePage from './pages/HomePage';
 import DoctorListPage from './pages/DoctorListPage';
 import PatientListPage from './pages/PatientListPage';
-import DoctorSchedulePage from './pages/DoctorSchedulePage';
-import PatientQueuePage from './pages/PatientQueuePage';
 
 const App = () => {
   return (
@@ -17,8 +15,6 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/daftar-dokter" element={<DoctorListPage />} />
             <Route path="/daftar-pasien" element={<PatientListPage />} />
-            <Route path="/jadwal-dokter" element={<DoctorSchedulePage />} />
-            <Route path="/antrian-pasien" element={<PatientQueuePage />} />
           </Routes>
         </main>
       </div>

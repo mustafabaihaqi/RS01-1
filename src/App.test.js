@@ -1,8 +1,17 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+jest.mock('./pages/HomePage', () => () => <div>Mocked HomePage</div>);
+
+test('renders Header and HomePage by default route', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+
+  expect(screen.getByText(/Sistem Antrean Rumah Sakit/i)).toBeInTheDocument();
+
+  expect(screen.getByText(/Pendaftaran/i)).toBeInTheDocument();
+  expect(screen.getByText(/Daftar Dokter/i)).toBeInTheDocument();
+  expect(screen.getByText(/Daftar Pasien/i)).toBeInTheDocument();
+
+  expect(screen.getByText(/Mocked HomePage/i)).toBeInTheDocument();
 });

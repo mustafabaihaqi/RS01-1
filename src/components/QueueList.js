@@ -44,7 +44,7 @@ const QueueList = () => {
             {queues.map(queue => (
               <tr key={queue._id} style={styles.tr}>
                 <td style={styles.td}>{queue.queueNumber}</td>
-                <td style={styles.td}>{queue.patientName}</td>
+                <td style={styles.td}>{queue.name}</td>
                 <td style={styles.td}>{queue.doctor}</td>
                 <td style={styles.td}>{queue.visitTime}</td>
               </tr>

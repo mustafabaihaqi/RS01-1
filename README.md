@@ -1,14 +1,14 @@
 # Dokumentasi Proyek
 
+## Tim Pengembang
+| Nama                     | NIM              | Role             | Tanggung Jawab                              |
+|--------------------------|------------------|------------------|--------------------------------------------|
+| Baihaqi Mustafa Surya A. | 20/456839/TK/50663 | Backend Engineer | - Pengembangan backend<br>- Pembuatan endpoint API<br>- Manajemen database<br>- Unit testing backend |
+| Rasyid Baskoro Agung     | 20/456850/TK/50674 | Frontend Engineer| - Pengembangan antarmuka pengguna<br>- Implementasi UX/UI<br>- Unit testing frontend |
+| Adrian Syah Abidin       | 20/463588/TK/51580 | QA Engineer      | - Penyusunan dokumen requirement<br>- Pembuatan test case<br>- Testing manual/otomatis<br>- API testing |
+
 ## Fitur dan Acceptance Criteria
 🔗 [Link Dokumen URD](https://docs.google.com/document/d/1YKR-j55tYq64zq93p6ZoHQboYU_ZWMYpQ0wIq7ddiCw/edit?usp=sharing)
-
-## Struktur Tim
-| Nama                     | Role             | Tanggung Jawab                              |
-|--------------------------|------------------|--------------------------------------------|
-| Baihaqi Mustafa Suray A. | Backend Engineer | - Pengembangan backend<br>- Pembuatan endpoint API<br>- Manajemen database<br>- Unit testing backend |
-| Rasyid Baskoro Agung     | Frontend Engineer| - Pengembangan antarmuka pengguna<br>- Implementasi UX/UI<br>- Unit testing frontend |
-| Adrian Syah Abidin       | QA Engineer      | - Penyusunan dokumen requirement<br>- Pembuatan test case<br>- Testing manual/otomatis<br>- API testing |
 
 ## Hasil Testing
 ### API Test

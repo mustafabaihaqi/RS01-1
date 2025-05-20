@@ -5,7 +5,7 @@
 |--------------------------|------------------|------------------|--------------------------------------------|
 | Baihaqi Mustafa Surya A. | 20/456839/TK/50663 | Backend Engineer | - Pengembangan backend<br>- Pembuatan endpoint API<br>- Manajemen database<br>- Unit testing backend |
 | Rasyid Baskoro Agung     | 20/456850/TK/50674 | Frontend Engineer| - Pengembangan antarmuka pengguna<br>- Implementasi UX/UI<br>- Unit testing frontend |
-| Adrian Syah Abidin       | 20/463588/TK/51580 | QA Engineer      | - Penyusunan dokumen requirement<br>- Pembuatan test case<br>- Testing manual/otomatis<br>- API testing |
+| Adrian Syah Abidin       | 20/463588/TK/51580 | QA Engineer      | - Penyusunan dokumen requirement<br>- Pembuatan test case<br>- Testing manual<br>- API testing |
 
 ## Presentasi
 📊 [Link Slide Presentasi](https://www.canva.com/design/DAGnzn318Ks/qYM07eRFXLuhhEY8vPjRIw/edit)

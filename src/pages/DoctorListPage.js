@@ -5,11 +5,9 @@ const DoctorListPage = () => {
   const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
-    const fetchDoctors = async () => {
-      const data = await getDoctors();
-      setDoctors(data);
-    };
-    fetchDoctors();
+    getDoctors()
+      .then(data => setDoctors(data))
+      .catch(err => console.error(err));
   }, []);
 
   return (
@@ -28,7 +26,7 @@ const DoctorListPage = () => {
             <tr key={doctor.id} style={styles.row}>
               <td>{doctor.name}</td>
               <td>{doctor.specialization}</td>
-              <td>{doctor.schedule}</td>
+              <td>{doctor.availableTimes}</td>
             </tr>
           ))}
         </tbody>

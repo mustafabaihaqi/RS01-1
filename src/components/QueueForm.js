@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getDoctors, createQueue } from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import QueueConfirmation from './QueueConfirmation';
+
+
 
 const QueueForm = ({ onQueueCreated }) => {
+  const [queueData, setQueueData] = useState(null);
   const [formData, setFormData] = useState({
     patientName: '',
     doctor: '',
     visitTime: ''
   });
+
+  const [doctors, setDoctors] = useState([]);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -14,24 +21,28 @@ const QueueForm = ({ onQueueCreated }) => {
 
   const navigate = useNavigate();
 
-  const doctors = [
-    { id: 1, name: "Dr. Andi", specialization: "Jantung", schedule: "08:00-15:00" },
-    { id: 2, name: "Dr. Budi", specialization: "Mata", schedule: "10:00-17:00" },
-    { id: 3, name: "Dr. Sule", specialization: "Kulit", schedule: "10:00-13:00" },
-    { id: 4, name: "Dr. Haidar", specialization: "Kandungan", schedule: "07:00-10:00" },
-    { id: 5, name: "Dr. Galih", specialization: "Paru", schedule: "12:00-14:00" },
-  ];
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const data = await getDoctors();
+        setDoctors(data);
+      } catch (err) {
+        setError('Gagal mengambil data dokter');
+      }
+    };
+    fetchDoctors();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     if (name === 'doctor') {
-      const selectedDoctor = doctors.find(doc => doc.id === parseInt(value));
-      const doctorSchedule = selectedDoctor ? selectedDoctor.schedule : '';
+      const selectedDoctor = doctors.find(doc => doc._id === value);
+      const doctorTime = selectedDoctor ? selectedDoctor.availableTimes : '';
       setFormData(prev => ({
         ...prev,
         doctor: value,
-        visitTime: doctorSchedule
+        availableTimes: doctorTime
       }));
     } else {
       setFormData(prev => ({
@@ -41,7 +52,7 @@ const QueueForm = ({ onQueueCreated }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.patientName.trim()) {
@@ -49,27 +60,40 @@ const QueueForm = ({ onQueueCreated }) => {
       return;
     }
 
-    if (formData.patientName.length > 50) {
-      setError('Nama pasien maksimal 50 karakter');
-      return;
-    }
-
-    if (!formData.doctor || !formData.visitTime) {
+    if (!formData.doctor || !formData.availableTimes) {
       setError('Silakan pilih dokter');
       return;
     }
 
-    const selectedDoctor = doctors.find(doc => doc.id === parseInt(formData.doctor));
-    if (!selectedDoctor) {
-      setError('Dokter tidak ditemukan');
-      return;
+    setIsSubmitting(true);
+    try {
+      const selectedDoctor = doctors.find(doc => doc._id === formData.doctor);
+      const response = await createQueue({
+        patientName: formData.patientName,
+        doctor: `${selectedDoctor.name} - ${selectedDoctor.specialization}`,
+        time: selectedDoctor.availableTimes
+      });
+
+      setQueueData({
+        queueNumber: response.queueNumber,
+        patientName: formData.patientName,
+        doctor: `${selectedDoctor.name} - ${selectedDoctor.specialization}`,
+        visitTime: selectedDoctor.availableTimes,
+      });
+      setShowPopup(true);
+      setFormData({ patientName: '', doctor: '', availableTimes: '' });
+      
+      if (onQueueCreated) onQueueCreated();
+    } catch (err) {
+      setError('Gagal membuat antrean');
+    } finally {
+      setIsSubmitting(false);
     }
 
-    setError('');
-    const nomorAntrean = 'A-' + Math.floor(100 + Math.random() * 900);
-    setQueueNumber(nomorAntrean);
-    setShowPopup(true);
+
   };
+
+  // ... (CSS styles tetap sama)
 
   return (
     <div style={styles.container}>
@@ -102,40 +126,38 @@ const QueueForm = ({ onQueueCreated }) => {
           >
             <option value="">-- Pilih Dokter --</option>
             {doctors.map(doctor => (
-              <option key={doctor.id} value={doctor.id}>
+              <option key={doctor._id} value={doctor._id}>
                 {doctor.name} - {doctor.specialization}
               </option>
             ))}
           </select>
         </div>
 
-        {formData.doctor && (
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Waktu Kunjungan:</label>
-            <div style={{ padding: '10px', backgroundColor: '#eee', borderRadius: '4px' }}>
-              {formData.visitTime}
-            </div>
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Waktu Kunjungan:</label>
+          <div style={{
+            padding: '10px',
+            backgroundColor: '#eee',
+            borderRadius: '4px',
+            color: formData.availableTimes ? '#2c3e50' : '#aaa'
+          }}>
+            {formData.availableTimes || '-- Belum memilih dokter --'}
           </div>
-        )}
+        </div>
+
 
         <button type="submit" style={styles.button} disabled={isSubmitting}>
           {isSubmitting ? 'Memproses...' : 'Daftar Antrean'}
         </button>
       </form>
 
-      {showPopup && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modalContent}>
-            <h3>Konfirmasi Pendaftaran</h3>
-            <p><strong>Nama:</strong> {formData.patientName}</p>
-            <p><strong>Nomor Antrean:</strong> {queueNumber}</p>
-            <p><strong>Waktu Kunjungan:</strong> {formData.visitTime}</p>
-            <button onClick={() => setShowPopup(false)}>
-              Tutup
-            </button>
-          </div>
-        </div>
+      {showPopup && queueData && (
+        <QueueConfirmation 
+          queue={queueData} 
+          onClose={() => setShowPopup(false)} 
+        />
       )}
+      
     </div>
   );
 };

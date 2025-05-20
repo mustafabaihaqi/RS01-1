@@ -1,17 +1,23 @@
+// src/App.test.js
+
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { act } from 'react';
 import App from './App';
 
-jest.mock('./pages/HomePage', () => () => <div>Mocked HomePage</div>);
+describe('App Component', () => {
+  it('renders Header and HomePage by default route', async () => {
+    await act(async () => {
+      render(<App />);
+    });
 
-test('renders Header and HomePage by default route', () => {
-  render(<App />);
+    // Header content
+    expect(screen.getByText(/Sistem Antrean Rumah Sakit/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Pendaftaran/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Daftar Dokter/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Daftar Antrean/i })).toBeInTheDocument();
 
-  expect(screen.getByText(/Sistem Antrean Rumah Sakit/i)).toBeInTheDocument();
-
-  expect(screen.getByText(/Pendaftaran/i)).toBeInTheDocument();
-  expect(screen.getByText(/Daftar Dokter/i)).toBeInTheDocument();
-  expect(screen.getByText(/Daftar Pasien/i)).toBeInTheDocument();
-
-  expect(screen.getByText(/Mocked HomePage/i)).toBeInTheDocument();
+    // Halaman utama (optional: sesuaikan dengan teks utama halaman beranda)
+    expect(screen.getByText(/Pendaftaran Antrean Online/i)).toBeInTheDocument();
+  });
 });

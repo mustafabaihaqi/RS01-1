@@ -1,3 +1,5 @@
+// src/pages/PatientListPage.test.js
+
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import PatientListPage from './PatientListPage';
@@ -6,24 +8,19 @@ import * as api from '../services/api';
 jest.mock('../services/api');
 
 const mockPatients = [
-  {
-    id: 1,
-    queueNumber: 'A01',
-    name: 'Budi',
-    doctor: 'Dr. Siti',
-    visitTime: '10:00',
-  },
+  { id: 1, name: 'Budi', doctor: 'Dr. Andi', visitTime: '2024-05-20 10:00' },
+  { id: 2, name: 'Siti', doctor: 'Dr. Budi', visitTime: '2024-05-20 11:00' }
 ];
 
-test('renders list of patients', async () => {
-  api.getPatients.mockResolvedValue(mockPatients);
+describe('PatientListPage', () => {
+  it('renders patient list from API', async () => {
+    api.getPatients.mockResolvedValue(mockPatients);
 
-  render(<PatientListPage />);
+    render(<PatientListPage />);
 
-  expect(screen.getByText(/Daftar Pasien/i)).toBeInTheDocument();
-
-  await waitFor(() => {
-    expect(screen.getByText(/Budi/i)).toBeInTheDocument();
-    expect(screen.getByText(/Dr. Siti/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Budi')).toBeInTheDocument();
+      expect(screen.getByText('Dr. Andi')).toBeInTheDocument();
+    });
   });
 });

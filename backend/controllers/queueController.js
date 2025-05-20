@@ -1,43 +1,61 @@
 const Queue = require('../models/queue');
+const Doctor = require('../models/doctor')
 
-let queueCounter = 1;
-
-(async () => {
-    try {
-        const lastQueue = await Queue.findOne().sort({ queueNumber: -1 });
-        if (lastQueue) {
-            const lastNumber = parseInt(lastQueue.queueNumber.substring(1), 10);
-            queueCounter = lastNumber + 1;
-        }
-    } catch (err) {
-        console.error('Gagal inisialisasi queueCounter:', err);
+const generateQueueNumber = async () => {
+    const allQueues = await Queue.find().sort({ queueNumber: 1 });
+  
+    const usedNumbers = new Set(
+      allQueues.map(q => parseInt(q.queueNumber.slice(1), 10))
+    );
+  
+    for (let i = 1; i <= usedNumbers.size + 1; i++) {
+      if (!usedNumbers.has(i)) {
+        return 'A' + i.toString().padStart(3, '0');
+      }
     }
-})();
+  };
 
-const generateQueueNumber = () => {
-    return 'A' + queueCounter.toString().padStart(3, '0');
-};
-
-const createQueue = async (req, res) => {
+  const createQueue = async (req, res) => {
     const { patientName, doctor, time } = req.body;
-
-    if (!patientName || patientName.trim() === '') {
-        return res.status(400).json({ error: 'Nama pasien wajib diisi' });
+  
+    if (!patientName || !doctor || !time) {
+      return res.status(400).json({ error: 'Data pasien, dokter, dan waktu wajib diisi' });
     }
-
+  
     try {
-        const queueNumber = generateQueueNumber();
-        const newEntry = new Queue({ patientName, doctor, time, queueNumber });
-        await newEntry.save();
-
-        queueCounter++; 
-
-        res.status(201).json(newEntry);
-    } catch (error) {
-        console.error('CREATE QUEUE ERROR:', error); 
-        res.status(400).json({ error: 'Gagal membuat antrean', detail: error.message }); 
+      const selectedDoctor = await Doctor.findById(doctor);
+      if (!selectedDoctor) return res.status(404).json({ error: 'Dokter tidak ditemukan' });
+  
+      const prefix = selectedDoctor.code.toUpperCase(); // e.g. 'A', 'B', etc.
+  
+      // Cari antrean terakhir untuk dokter ini berdasarkan prefix-nya
+      const lastQueue = await Queue.findOne({ queueNumber: new RegExp(`^${prefix}`) })
+        .sort({ queueNumber: -1 });
+  
+      let nextNumber = 1;
+      if (lastQueue) {
+        const lastNum = parseInt(lastQueue.queueNumber.slice(1), 10);
+        nextNumber = lastNum + 1;
+      }
+  
+      const queueNumber = prefix + nextNumber.toString().padStart(3, '0');
+  
+      const newQueue = new Queue({
+        patientName,
+        doctor: selectedDoctor.name,
+        time,
+        queueNumber
+      });
+  
+      await newQueue.save();
+  
+      res.status(201).json(newQueue);
+    } catch (err) {
+      console.error('CREATE QUEUE ERROR:', err);
+      res.status(500).json({ error: 'Terjadi kesalahan saat membuat antrean' });
     }
-};
+  };
+  
 
 const getQueues = async (req, res) => {
     try {

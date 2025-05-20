@@ -51,35 +51,37 @@ const QueueForm = ({ onQueueCreated }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.name.trim()) {
       setError('Nama pasien wajib diisi');
       return;
     }
-
+  
     if (!formData.doctor || !formData.visitTime) {
       setError('Silakan pilih dokter');
       return;
     }
-
+  
     setIsSubmitting(true);
     try {
-      const selectedDoctor = doctors.find(doc => doc._id === formData.doctor);
+      // Kirim doctor sebagai ObjectId (string _id), bukan nama dokter
       const response = await createQueue({
         patientName: formData.name,
-        doctor: `${selectedDoctor.name} - ${selectedDoctor.specialization}`,
+        doctor: formData.doctor,  // <-- kirim ID dokter langsung
         time: formData.visitTime
       });
-
+  
+      const selectedDoctor = doctors.find(doc => doc._id === formData.doctor);
+  
       setQueueData({
         queueNumber: response.queueNumber,
         patientName: formData.name,
-        doctor: `${selectedDoctor.name} - ${selectedDoctor.specialization}`,
+        doctor: `${selectedDoctor.name} - ${selectedDoctor.specialization}`, // ini untuk tampilan saja
         visitTime: formData.visitTime,
       });
       setShowPopup(true);
       setFormData({ name: '', doctor: '', visitTime: '' });
-
+  
       if (onQueueCreated) onQueueCreated();
     } catch (err) {
       setError('Gagal membuat antrean');
@@ -87,7 +89,7 @@ const QueueForm = ({ onQueueCreated }) => {
       setIsSubmitting(false);
     }
   };
-
+  
   const styles = {
     container: {
       maxWidth: '600px',

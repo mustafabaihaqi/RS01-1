@@ -1,0 +1,417 @@
+{
+	"info": {
+		"_postman_id": "d6856fa8-9857-4f76-a4fc-a4a736ef88ba",
+		"name": "RS01-1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45092312",
+		"_collection_link": "https://rs01-1.postman.co/workspace/My-Workspace~5e12eb96-823f-45dd-8cd9-107273737de6/collection/23577154-d6856fa8-9857-4f76-a4fc-a4a736ef88ba?action=share&source=collection_link&creator=45092312"
+	},
+	"item": [
+		{
+			"name": "Queue",
+			"item": [
+				{
+					"name": "Buat Antrian (valid)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"        pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate data types for 'patientName', 'doctor', and 'time'\", function () {\r",
+									"    // Ambil dan parse body dari request\r",
+									"    let requestBody = pm.request.body.raw;\r",
+									"    let requestObject = JSON.parse(requestBody);\r",
+									"\r",
+									"    // Validasi tipe data masing-masing field\r",
+									"    pm.expect(typeof requestObject.patientName).to.eql('string');\r",
+									"    pm.expect(typeof requestObject.doctor).to.eql('string');\r",
+									"    pm.expect(typeof requestObject.time).to.eql('string');\r",
+									"});\r",
+									"\r",
+									"const schema = \r",
+									"\r",
+									"{\r",
+									"\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"patientName\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"doctor\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"time\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"queueNumber\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"_id\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"__v\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"patientName\",\r",
+									"    \"doctor\",\r",
+									"    \"time\",\r",
+									"    \"queueNumber\",\r",
+									"    \"_id\",\r",
+									"    \"__v\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validating schema\", function () {\r",
+									"  pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"patientName\": \"Yanto Kocul\",\r\n  \"doctor\": \"Dr. Budi - Spesialis Mata\",\r\n  \"time\": \"12:00\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}queue",
+							"host": [
+								"{{URL}}queue"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buat Antrian (invalid - nama > 50)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"        pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate data types for 'patientName', 'doctor', and 'time'\", function () {\r",
+									"    // Ambil dan parse body dari request\r",
+									"    let requestBody = pm.request.body.raw;\r",
+									"    let requestObject = JSON.parse(requestBody);\r",
+									"\r",
+									"    // Validasi tipe data masing-masing field\r",
+									"    pm.expect(typeof requestObject.patientName).to.eql('string');\r",
+									"    pm.expect(typeof requestObject.doctor).to.eql('string');\r",
+									"    pm.expect(typeof requestObject.time).to.eql('string');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const schema = \r",
+									"\r",
+									"{\r",
+									"  \r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"error\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"detail\": {\r",
+									"      \"type\": \"string\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"error\",\r",
+									"    \"detail\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validating schema\", function () {\r",
+									"  pm.response.to.have.jsonSchema(schema);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"patientName\": \"NamaIniSangatPanjangHarusnyaAkanErrorKetikaMembuatAntrian\",\r\n  \"doctor\": \"Dr. Andi - Spesialis Jantung\",\r\n  \"time\": \"09:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}queue",
+							"host": [
+								"{{URL}}queue"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buat Antrian (invalid - tanpa nama))",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"        pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate data types for 'patientName', 'doctor', and 'time'\", function () {\r",
+									"    // Ambil dan parse body dari request\r",
+									"    let requestBody = pm.request.body.raw;\r",
+									"    let requestObject = JSON.parse(requestBody);\r",
+									"\r",
+									"    // Validasi tipe data masing-masing field\r",
+									"    pm.expect(typeof requestObject.patientName).to.eql('string');\r",
+									"    pm.expect(typeof requestObject.doctor).to.eql('string');\r",
+									"    pm.expect(typeof requestObject.time).to.eql('string');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const schema = \r",
+									"\r",
+									"{\r",
+									" \r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"error\": {\r",
+									"      \"type\": \"string\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"error\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validating schema\", function () {\r",
+									"  pm.response.to.have.jsonSchema(schema);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"patientName\": \"\",\r\n  \"doctor\": \"Dr. Andi - Spesialis Jantung\",\r\n  \"time\": \"09:00\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}queue",
+							"host": [
+								"{{URL}}queue"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lihat Semua Daftar Antrian",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"        pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const schema = \r",
+									"{\r",
+									"  \r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"      \"_id\": {\r",
+									"        \"type\": \"string\"\r",
+									"      },\r",
+									"      \"patientName\": {\r",
+									"        \"type\": \"string\"\r",
+									"      },\r",
+									"      \"doctor\": {\r",
+									"        \"type\": \"string\"\r",
+									"      },\r",
+									"      \"time\": {\r",
+									"        \"type\": \"string\"\r",
+									"      },\r",
+									"      \"queueNumber\": {\r",
+									"        \"type\": \"string\"\r",
+									"      },\r",
+									"      \"__v\": {\r",
+									"        \"type\": \"number\"\r",
+									"      }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"      \"_id\",\r",
+									"      \"patientName\",\r",
+									"      \"doctor\",\r",
+									"      \"time\",\r",
+									"      \"queueNumber\",\r",
+									"      \"__v\"\r",
+									"    ]\r",
+									"  }\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Validating schema\", function () {\r",
+									"  pm.response.to.have.jsonSchema(schema);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}queue",
+							"host": [
+								"{{URL}}queue"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.test(\"Response time is less than 5000ms\", function () {\r",
+					"        pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+					"        \r",
+					"});\r",
+					"\r",
+					""
+				]
+			}
+		}
+	]
+}

@@ -35,7 +35,7 @@ const createQueue = async (req, res) => {
         res.status(201).json(newEntry);
     } catch (error) {
         console.error('CREATE QUEUE ERROR:', error); 
-        res.status(500).json({ error: 'Gagal membuat antrean', detail: error.message }); 
+        res.status(400).json({ error: 'Gagal membuat antrean', detail: error.message }); 
     }
 };
 

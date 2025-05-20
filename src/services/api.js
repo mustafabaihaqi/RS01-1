@@ -4,15 +4,19 @@ const API_URL = 'http://localhost:5000/api';
 
 // Data dokter dari backend
 export const getDoctors = async () => {
+// Data dokter dari backend
+export const getDoctors = async () => {
   try {
     const response = await axios.get(`${API_URL}/doctor`);
     return response.data;
   } catch (error) {
     console.error('Error fetching doctors:', error);
+    console.error('Error fetching doctors:', error);
     throw error;
   }
 };
 
+// Data antrean dari backend
 // Data antrean dari backend
 export const getQueues = async () => {
   try {

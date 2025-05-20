@@ -8,7 +8,7 @@ import QueueConfirmation from './QueueConfirmation';
 const QueueForm = ({ onQueueCreated }) => {
   const [queueData, setQueueData] = useState(null);
   const [formData, setFormData] = useState({
-    patientName: '',
+    name: '',
     doctor: '',
     visitTime: ''
   });
@@ -53,9 +53,10 @@ const QueueForm = ({ onQueueCreated }) => {
   };
 
   const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!formData.patientName.trim()) {
+  
+    if (!formData.name.trim()) {
       setError('Nama pasien wajib diisi');
       return;
     }
@@ -102,12 +103,12 @@ const QueueForm = ({ onQueueCreated }) => {
 
       <form onSubmit={handleSubmit} style={styles.form}>
         <div style={styles.formGroup}>
-          <label htmlFor="patientName" style={styles.label}>Nama Pasien:</label>
+          <label htmlFor="name" style={styles.label}>Nama Pasien:</label>
           <input
             type="text"
-            id="patientName"
-            name="patientName"
-            value={formData.patientName}
+            id="name"
+            name="name"
+            value={formData.name}
             onChange={handleChange}
             maxLength={50}
             style={styles.input}

@@ -1,7 +1,7 @@
 # Dokumentasi Proyek
 
 ## Fitur dan Acceptance Criteria
-🔗 [Lihat dokumen lengkap](https://docs.google.com/document/d/1YKR-j55tYq64zq93p6ZoHQboYU_ZWMYpQ0wIq7ddiCw/edit?usp=sharing)
+🔗 [Link Dokumen URD](https://docs.google.com/document/d/1YKR-j55tYq64zq93p6ZoHQboYU_ZWMYpQ0wIq7ddiCw/edit?usp=sharing)
 
 ## Struktur Tim
 | Nama                     | Role             | Tanggung Jawab                              |

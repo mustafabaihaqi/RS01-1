@@ -7,6 +7,9 @@
 | Rasyid Baskoro Agung     | 20/456850/TK/50674 | Frontend Engineer| - Pengembangan antarmuka pengguna<br>- Implementasi UX/UI<br>- Unit testing frontend |
 | Adrian Syah Abidin       | 20/463588/TK/51580 | QA Engineer      | - Penyusunan dokumen requirement<br>- Pembuatan test case<br>- Testing manual/otomatis<br>- API testing |
 
+## Presentasi
+📊 [Link Slide Presentasi](https://www.canva.com/design/DAGnzn318Ks/qYM07eRFXLuhhEY8vPjRIw/edit)
+
 ## Fitur dan Acceptance Criteria
 🔗 [Link Dokumen URD](https://docs.google.com/document/d/1YKR-j55tYq64zq93p6ZoHQboYU_ZWMYpQ0wIq7ddiCw/edit?usp=sharing)
 
@@ -18,5 +21,3 @@
 ### Coverage Unit Test
 [Data akan diupdate]
 
-## Presentasi
-📊 [Link Slide Presentasi](https://www.canva.com/design/DAGnzn318Ks/qYM07eRFXLuhhEY8vPjRIw/edit)
